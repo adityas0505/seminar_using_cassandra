@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #06b6d4; /* Neon Cyan */
+  --color-primary-600: #0891b2;
+  --color-primary-700: #0e7490;
+  --color-primary-800: #155e75;
+  --color-primary-900: #164e63;
+
+  --color-accent-500: #a855f7; /* Neon Purple */
+  --color-accent-600: #9333ea;
+  
+  --color-dark-bg: #09090b;
+  --color-dark-surface: #18181b;
+  --color-dark-border: #27272a;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-dark-bg);
+  color: #f4f4f5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(24, 24, 27, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Neon glow utilities */
+.neon-glow {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+.neon-glow-accent {
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+.neon-text {
+  text-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+}
+
+/* Form inputs dark styling */
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="time"], input[type="number"], select {
+  background-color: rgba(24, 24, 27, 0.8) !important;
+  color: #e4e4e7 !important;
+  border-color: #3f3f46 !important;
+  color-scheme: dark;
+}
+input:focus, select:focus {
+  border-color: var(--color-primary-500) !important;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2) !important;
+}
