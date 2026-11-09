@@ -1,11 +1,11 @@
-const SeminarHall = require('../models/SeminarHall');
+const hallModel = require('../models/astra/hallModel');
 
 // @desc    Get all seminar halls
 // @route   GET /api/halls
 // @access  Public
 exports.getHalls = async (req, res, next) => {
   try {
-    const halls = await SeminarHall.find();
+    const halls = await hallModel.getAllHalls();
     res.status(200).json({ success: true, count: halls.length, data: halls });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
@@ -17,7 +17,7 @@ exports.getHalls = async (req, res, next) => {
 // @access  Public
 exports.getHall = async (req, res, next) => {
   try {
-    const hall = await SeminarHall.findById(req.params.id);
+    const hall = await hallModel.getHallById(req.params.id);
     if (!hall) {
       return res.status(404).json({ success: false, error: 'Seminar Hall not found' });
     }
@@ -39,7 +39,7 @@ exports.createHall = async (req, res, next) => {
       hallData.image = `http://localhost:5000/uploads/${req.file.filename}`;
     }
 
-    const hall = await SeminarHall.create(hallData);
+    const hall = await hallModel.createHall(hallData);
     res.status(201).json({ success: true, data: hall });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
@@ -57,10 +57,7 @@ exports.updateHall = async (req, res, next) => {
       hallData.image = `http://localhost:5000/uploads/${req.file.filename}`;
     }
 
-    const hall = await SeminarHall.findByIdAndUpdate(req.params.id, hallData, {
-      new: true,
-      runValidators: true
-    });
+    const hall = await hallModel.updateHall(req.params.id, hallData);
     if (!hall) {
       return res.status(404).json({ success: false, error: 'Seminar Hall not found' });
     }
@@ -75,11 +72,11 @@ exports.updateHall = async (req, res, next) => {
 // @access  Private (Admin)
 exports.deleteHall = async (req, res, next) => {
   try {
-    const hall = await SeminarHall.findById(req.params.id);
+    const hall = await hallModel.getHallById(req.params.id);
     if (!hall) {
       return res.status(404).json({ success: false, error: 'Seminar Hall not found' });
     }
-    await hall.deleteOne();
+    await hallModel.deleteHall(req.params.id);
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });

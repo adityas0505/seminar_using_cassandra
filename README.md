@@ -18,22 +18,24 @@ BookMyHall is a modern, full-stack Seminar Hall Booking System designed to strea
 ## 🚀 Tech Stack
 * **Frontend:** React, Tailwind CSS, Lucide Icons, Vite
 * **Backend:** Node.js, Express.js
-* **Database:** MongoDB (Mongoose)
+* **Database:** DataStax Astra DB / Apache Cassandra (Data API & CQL)
 * **Authentication:** JWT-based session management
 
 ## 🛠️ Installation & Setup
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Aditya0511S/seminar-booking-system.git
-   cd seminar-booking-system
+   git clone https://github.com/adityas0505/Seminar_Booking_System.git
+   cd Seminar_Booking_System
    ```
 
 2. **Backend Setup:**
    ```bash
    cd backend
    npm install
-   # Create a .env file with your MONGO_URI and JWT_SECRET
+   # Configure .env with your ASTRA_DB_API_ENDPOINT, ASTRA_DB_APPLICATION_TOKEN, and JWT_SECRET
+   # Run the seed script to create initial admin and seminar halls:
+   node setup_admin_astra.js
    npm run dev
    ```
 

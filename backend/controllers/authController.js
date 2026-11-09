@@ -1,10 +1,9 @@
-const User = require('../models/User');
+const userModel = require('../models/astra/userModel');
 const jwt = require('jsonwebtoken');
 
-// Get token from model, create cookie and send response
+// Get token from model, create response
 const sendTokenResponse = (user, statusCode, res) => {
-  // Create token
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user._id || user.id }, process.env.JWT_SECRET, {
     expiresIn: '30d'
   });
 
@@ -12,7 +11,8 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
     user: {
-      id: user._id,
+      id: user._id || user.id,
+      _id: user._id || user.id,
       name: user.name,
       email: user.email,
       role: user.role
@@ -27,12 +27,19 @@ exports.register = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // Create user
-    const user = await User.create({
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, error: 'Please provide name, email, and password' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, error: 'Password must be at least 6 characters long' });
+    }
+
+    const user = await userModel.createUser({
       name,
       email,
       password,
-      role
+      role: role || 'user'
     });
 
     sendTokenResponse(user, 201, res);
@@ -48,20 +55,17 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate email and password
     if (!email || !password) {
       return res.status(400).json({ success: false, error: 'Please provide an email and password' });
     }
 
-    // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    const user = await userModel.findUserByEmail(email, true);
 
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
-    // Check if password matches
-    const isMatch = await user.matchPassword(password);
+    const isMatch = await userModel.matchPassword(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });

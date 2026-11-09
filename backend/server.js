@@ -1,17 +1,14 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const path = require('path');
 
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
+const { initAstraDB } = require('./config/astra');
 
 const app = express();
-
-const path = require('path');
 
 // Body parser
 app.use(express.json());
@@ -38,7 +35,14 @@ app.get('/api/admin/bookings', protect, authorize('admin'), getAllBookings);
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(
-  PORT,
-  console.log(`Server running on port ${PORT}`)
-);
+// Initialize Astra DB and start server
+initAstraDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT} with DataStax Astra DB`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to initialize Astra DB:', err);
+    process.exit(1);
+  });
